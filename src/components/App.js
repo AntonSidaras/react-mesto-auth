@@ -1,5 +1,8 @@
 import React from "react";
 import Header from "./Header";
+import Login from "./Login";
+import Register from "./Register";
+import InfoTooltip from "./InfoTooltip";
 import Footer from "./Footer";
 import Main from "./Main";
 import DeleteConfirmPopup from "./DeleteConfirmPopup";
@@ -9,8 +12,9 @@ import AddPlacePopup from "./AddPlacePopup";
 import ImagePopup from "./ImagePopup";
 import Loader from "./Loader";
 import api from "../utils/api";
-import ImperativeValidation from "../utils/utils"
 import onLoadImage from "../images/profile/Card-load.gif"
+import onSuccessAuth from "../images/popup/ok.svg"
+import onFailureAuth from "../images/popup/fail.svg"
 import {CurrentUserContext} from '../contexts/CurrentUserContext';
 
 function App() {
@@ -40,7 +44,6 @@ function App() {
     })
     .finally(()=>{
       setLoaderVisible(false);
-      //ImperativeValidation(); старая императивная валидация
     });
   }, []);
 
@@ -162,9 +165,12 @@ function App() {
   }
 
   return (
-    <div className="page__content">
+    <div className="page page__content">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header/>
+        <Header location={"Войти"}/>
+        {/*<InfoTooltip name={"InfoTooltip"} isOpen={true} image={onFailureAuth} text={"Что-то пошло не так! Попробуйте ещё раз."} onClose={closeAllPopups}/>
+        <Register/>
+        <Login />*/}
         <Main
           cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete}
           onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} 

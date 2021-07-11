@@ -9,7 +9,6 @@
   position: relative;
   object-fit: contain;
   justify-self: start;
-  z-index: -1;
 }
 @media screen and (max-width: 940px) {
   .profile__avatar{
