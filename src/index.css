@@ -4,6 +4,7 @@
 @import url(./blocks/page/__content/page__content.css);
 @import url(./blocks/auth/auth.css);
 @import url(./blocks/auth/__header/auth__header.css);
+@import url(./blocks/auth/__form/auth__form.css);
 @import url(./blocks/auth/__input/auth__input.css);
 @import url(./blocks/auth/__submit-button/auth__submit-button.css);
 @import url(./blocks/auth/__caption/auth__caption.css);

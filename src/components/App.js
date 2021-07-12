@@ -1,4 +1,6 @@
 import React from "react";
+import { BrowserRouter, Route, Redirect, Switch, Link } from 'react-router-dom';
+import ProtectedRoute from "./ProtectedRoute";
 import Header from "./Header";
 import Login from "./Login";
 import Register from "./Register";
@@ -165,12 +167,58 @@ function App() {
   }
 
   return (
-    <div className="page page__content">
+    <BrowserRouter>
+      <div className="page page__content">
+        <CurrentUserContext.Provider value={currentUser}>
+          <Header location={"Войти"}/>
+            {/*<ProtectedRoute
+              path="/"
+              loggedIn={true}
+              component={Main}
+              cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete}
+              onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} 
+              onAddPlace={handleAddPlaceClick} onCardClick={handleCardClick}
+            />*/}
+            <Route exact path="/">
+              <Main
+                cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete}
+                onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} 
+                onAddPlace={handleAddPlaceClick} onCardClick={handleCardClick}
+              />
+            </Route>
+            <Route exact path="/">
+              <Footer/>
+            </Route>
+            <Route exact path="/">
+              <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} buttonCaption={buttonCaption}/>
+              <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} buttonCaption={buttonCaption}/>
+              <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} buttonCaption={buttonCaption}/> 
+              <DeleteConfirmPopup card={cardToDelete} onClose={closeAllPopups} onDelete={handleDelete} buttonCaption={buttonCaption}/>
+              <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
+              <Loader isVisible={isLoaderVisible} image={onLoadImage}/>
+            </Route>
+            <Switch>
+              <Route exact path="/sign-in">
+                <Login />
+              </Route>
+              <Route exact path="/sign-up">
+                <Register />
+              </Route>
+              <Route exact path="/">
+                {true ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
+              </Route>
+          </Switch>
+          <InfoTooltip name={"InfoTooltip"} isOpen={false} image={onSuccessAuth} text={"Вы успешно зарегистрировались!"} onClose={closeAllPopups}/>
+        </CurrentUserContext.Provider>
+      </div>
+    </BrowserRouter>
+
+
+    /*<div className="page page__content">
       <CurrentUserContext.Provider value={currentUser}>
         <Header location={"Войти"}/>
-        {/*<InfoTooltip name={"InfoTooltip"} isOpen={true} image={onFailureAuth} text={"Что-то пошло не так! Попробуйте ещё раз."} onClose={closeAllPopups}/>
+        {/*<Login />
         <Register/>
-        <Login />*/}
         <Main
           cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete}
           onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} 
@@ -183,8 +231,9 @@ function App() {
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} buttonCaption={buttonCaption}/> 
         <DeleteConfirmPopup card={cardToDelete} onClose={closeAllPopups} onDelete={handleDelete} buttonCaption={buttonCaption}/>
         <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
+        <InfoTooltip name={"InfoTooltip"} isOpen={false} image={onSuccessAuth} text={"Вы успешно зарегистрировались!"} onClose={closeAllPopups}/>
       </CurrentUserContext.Provider>
-    </div>
+      </div>*/
   );
 }
 
