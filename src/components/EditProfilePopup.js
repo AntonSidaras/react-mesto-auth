@@ -13,13 +13,13 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser, buttonCaption}) {
   const currentUser = React.useContext(CurrentUserContext);
 
   React.useEffect(() => {
-    setName(currentUser.name);
-    setDescription(currentUser.about);
+    setName(currentUser.currentUser.name);
+    setDescription(currentUser.currentUser.about);
     setIsAboutValid(true);
     setIsNameValid(true);
     nameErrorRef.current.innerText = "";
     aboutErrorRef.current.innerText = "";
-  }, [currentUser, isOpen]);
+  }, [currentUser.currentUser, isOpen]);
 
   function handleChangeName(event){
     setName(event.target.value);

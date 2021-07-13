@@ -7,13 +7,13 @@ function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, buttonCaption}) {
   const [isAvatarValid, setIsAvatarValid] = React.useState(true);
   const avatarErrorRef = React.useRef();
   const avatarRef = React.useRef();
-  const currentUser = React.useContext(CurrentUserContext);
+  const user = React.useContext(CurrentUserContext);
 
   React.useEffect(() => {
-    avatarRef.current.value = currentUser.avatar;
+    avatarRef.current.value = user.currentUser.avatar;
     avatarErrorRef.current.innerText = "";
     setIsAvatarValid(true);
-  }, [currentUser, isOpen]);
+  }, [user.currentUser, isOpen]);
 
   function handleSubmit(event) {
     event.preventDefault();
