@@ -12,9 +12,13 @@
 @import url(./blocks/header/header.css);
 @import url(./blocks/header/__data/header__data.css);
 @import url(./blocks/header/__logo/header__logo.css);
+@import url(./blocks/header/__extra/header__extra.css);
+@import url(./blocks/header/__extra/_opened/header__extra_opened.css);
 @import url(./blocks/header/__text/header__text.css);
 @import url(./blocks/header/__text/_type/header__text_type_link.css);
 @import url(./blocks/header/__text/_type/header__text_type_logout.css);
+@import url(./blocks/header/__text/_type/header__text_type_email.css);
+@import url(./blocks/header/__text/_none/header__text_none.css);
 @import url(./blocks/profile/profile.css);
 @import url(./blocks/profile/__avatar-button/profile__avatar-button.css);
 @import url(./blocks/profile/__avatar/profile__avatar.css);

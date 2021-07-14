@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
+import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
 import ProtectedRoute from "./ProtectedRoute";
 import Header from "./Header";
 import Login from "./Login";
@@ -184,7 +184,7 @@ function App() {
       <div className="page page__content">
         <CurrentUserContext.Provider value={{currentUser: currentUser, isloggedIn: isLoggedIn, handleLogin: toggleLogin}}>
           <ProtectedRoute 
-            exact path='/' component={Header} data={{caption: "email@mail.com", text: "", link: "", button: "Выйти"}}
+            exact path='/' component={Header} data={{email: "email@mail.com", text: "", link: "", button: "Выйти"}} onLogout={toggleLogin}
           />
           <ProtectedRoute 
             exact path='/' component={Main}
@@ -226,13 +226,13 @@ function App() {
           <Switch>
             <Route exact path="/sign-in">
               {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
-              <Header data={{caption: "", text:"Регистрация", link: "/sign-up", button: ""}}/>
-              <Login onLoginSuccess={handleOpenInfoToolTip}/>
+              <Header data={{email: "", text:"Регистрация", link: "/sign-up", button: ""}}/>
+              <Login onLoginSuccess={handleOpenInfoToolTip} onLogin={toggleLogin}/>
               <InfoTooltip isOpen={isInfoTooltipPopupOpen} image={onFailureAuth} text={"Что-то пошло не так! Попробуйте ещё раз."} onClose={closeAllPopups}/>
             </Route>
             <Route exact path="/sign-up">
               {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/sign-up" />}
-              <Header data={{caption: "", text:"Войти", link: "/sign-in", button: ""}}/>
+              <Header data={{email: "", text:"Войти", link: "/sign-in", button: ""}}/>
               <Register onRegisterFail={handleOpenInfoToolTip}/>
               <InfoTooltip isOpen={isInfoTooltipPopupOpen} image={onSuccessAuth} text={"Вы успешно зарегистрировались!"} onClose={closeAllPopups}/>
             </Route>
@@ -246,28 +246,6 @@ function App() {
         </CurrentUserContext.Provider>
       </div>
     </BrowserRouter>
-
-
-    /*<div className="page page__content">
-      <CurrentUserContext.Provider value={currentUser}>
-        <Header location={"Войти"}/>
-        {/*<Login />
-        <Register/>
-        <Main
-          cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete}
-          onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} 
-          onAddPlace={handleAddPlaceClick} onCardClick={handleCardClick}
-        />
-        <Loader isVisible={isLoaderVisible} image={onLoadImage}/>
-        <Footer/>
-        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} buttonCaption={buttonCaption}/>
-        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} buttonCaption={buttonCaption}/>
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} buttonCaption={buttonCaption}/> 
-        <DeleteConfirmPopup card={cardToDelete} onClose={closeAllPopups} onDelete={handleDelete} buttonCaption={buttonCaption}/>
-        <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
-        <InfoTooltip name={"InfoTooltip"} isOpen={false} image={onSuccessAuth} text={"Вы успешно зарегистрировались!"} onClose={closeAllPopups}/>
-      </CurrentUserContext.Provider>
-      </div>*/
   );
 }
 

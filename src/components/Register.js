@@ -5,7 +5,7 @@ function handleSubmit(event){
   event.preventDefault()
 }
 
-function Register() {
+function Register({onRegisterFail}) {
   return (
     <section className="auth">
       <h2 className="auth__header">Регистрация</h2>

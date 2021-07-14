@@ -11,5 +11,7 @@
 @media screen and (max-width: 645px) {
   .auth__header{
     line-height: 24px;
+    font-size: 20px;
+    line-height: 24px;
   }
 }

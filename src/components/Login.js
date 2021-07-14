@@ -1,10 +1,16 @@
 import React from 'react';
 
-function Login() {
+function Login({onLoginSuccess, onLogin}) {
+
+  function handleSubmit(event){
+    event.preventDefault()
+    onLogin();
+  }
+  
   return (
     <section className="auth">
       <h2 className="auth__header">Вход</h2>
-      <form className="auth__form">
+      <form className="auth__form" onSubmit={handleSubmit}>
         <input 
           className="auth__input" placeholder="Email" type="email"
         />
