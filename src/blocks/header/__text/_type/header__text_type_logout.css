@@ -20,6 +20,10 @@
 }
 @media screen and (max-width: 940px) {
   .header__text_type_logout{
-    display: none;
+    align-self: center;
+    margin: 0;
+    margin-bottom: 40px;
+    font-size: 18px;
+    line-height: 22px;
   }
 }

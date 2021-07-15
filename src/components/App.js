@@ -14,7 +14,7 @@ import AddPlacePopup from "./AddPlacePopup";
 import ImagePopup from "./ImagePopup";
 import Loader from "./Loader";
 import PageNotFound from "./PageNotFound";
-import api from "../utils/api";
+import Api from "../utils/api";
 import onLoadImage from "../images/profile/Card-load.gif"
 import onSuccessAuth from "../images/popup/ok.svg"
 import onFailureAuth from "../images/popup/fail.svg"
@@ -39,7 +39,7 @@ function App() {
 
   React.useEffect(() => {
 
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
+    Promise.all([Api.getUserInfo(), Api.getInitialCards()])
     .then(([userData, cards]) => {
       setCurrentUser(userData);
       setCards(cards);
@@ -61,7 +61,7 @@ function App() {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
 
     if(isLiked){
-      api.dislikeCard(card._id)
+      Api.dislikeCard(card._id)
       .then((result) => {
         setCards((state) => state.map((c) => c._id === card._id ? result : c));
       })
@@ -70,7 +70,7 @@ function App() {
       });
     }
     else{
-      api.likeCard(card._id)
+      Api.likeCard(card._id)
       .then((result) => {
         setCards((state) => state.map((c) => c._id === card._id ? result : c));
       })
@@ -115,7 +115,7 @@ function App() {
 
   function handleUpdateUser({name, about}){
     setButtonCaption({add: "Создать", delete: "Да", others: "Сохранение..."});
-    api.setUserInfo({
+    Api.setUserInfo({
       newName: name, 
       newAbout: about
     })
@@ -133,7 +133,7 @@ function App() {
 
   function handleUpdateAvatar({avatar}){
     setButtonCaption({add: "Создать", delete: "Да", others: "Сохранение..."});
-    api.updateAvatar(avatar)
+    Api.updateAvatar(avatar)
     .then((result) => {
       setCurrentUser(result);
       closeAllPopups();
@@ -148,7 +148,7 @@ function App() {
 
   function handleAddPlaceSubmit({title, link}){
     setButtonCaption({add: "Сохранение...", delete: "Да", others: "Сохранить"});
-    api.createNewCard({
+    Api.createNewCard({
       newTitle: title,
       newLink: link
     })
@@ -166,7 +166,7 @@ function App() {
 
   function handleDelete(card){
     setButtonCaption({add: "Создать", delete: "Удаление...", others: "Сохранить"});
-    api.removeCard(card._id)
+    Api.removeCard(card._id)
     .then(() => {
       setCards((state) => state.filter(c => c._id !== card._id));
       closeAllPopups();
