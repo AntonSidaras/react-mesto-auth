@@ -227,13 +227,13 @@ function App() {
             <Route exact path="/sign-in">
               {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
               <Header data={{email: "", text:"Регистрация", link: "/sign-up", button: ""}}/>
-              <Login onLoginSuccess={handleOpenInfoToolTip} onLogin={toggleLogin}/>
+              <Login onLoginFail={handleOpenInfoToolTip} onLogin={toggleLogin}/>
               <InfoTooltip isOpen={isInfoTooltipPopupOpen} image={onFailureAuth} text={"Что-то пошло не так! Попробуйте ещё раз."} onClose={closeAllPopups}/>
             </Route>
             <Route exact path="/sign-up">
               {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/sign-up" />}
               <Header data={{email: "", text:"Войти", link: "/sign-in", button: ""}}/>
-              <Register onRegisterFail={handleOpenInfoToolTip}/>
+              <Register onRegisterSuccess={handleOpenInfoToolTip}/>
               <InfoTooltip isOpen={isInfoTooltipPopupOpen} image={onSuccessAuth} text={"Вы успешно зарегистрировались!"} onClose={closeAllPopups}/>
             </Route>
             <Route exact path="/">

@@ -17,12 +17,12 @@ function Header({data, onLogout}) {
   return (
     <header className={`header`}>
       <div className="header__top">{
-        isViewExtra == true && data.email !== "" && 
+        isViewExtra === true && data.email !== "" && 
           <span 
             className="header__text header__text_type_email header__text_type_media-min-width-invisible">{data.email}
           </span>
       }{
-        isViewExtra == true && data.button !== "" && 
+        isViewExtra === true && data.button !== "" && 
         <button 
           type="button" 
           className="header__text header__text_type_logout header__text_type_media-min-width-invisible" 
