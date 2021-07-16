@@ -2,7 +2,7 @@ import logo from "../images/header/logo.svg";
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function Header({data, onLogout}) {
+function Header({data, onSignOut}) {
 
   const [isViewExtra, setisViewExtra] = React.useState(false);
 
@@ -11,7 +11,7 @@ function Header({data, onLogout}) {
   }
 
   function handleClick(){
-    onLogout();
+    onSignOut();
   }
 
   return (

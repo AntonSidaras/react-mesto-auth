@@ -1,5 +1,5 @@
 import React from "react";
-import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom';
+import {BrowserRouter, Route, Redirect, Switch, useHistory} from 'react-router-dom';
 import ProtectedRoute from "./ProtectedRoute";
 import Header from "./Header";
 import Login from "./Login";
@@ -15,6 +15,7 @@ import ImagePopup from "./ImagePopup";
 import Loader from "./Loader";
 import PageNotFound from "./PageNotFound";
 import Api from "../utils/api";
+import Auth from '../utils/auth';
 import onLoadImage from "../images/profile/Card-load.gif"
 import onSuccessAuth from "../images/popup/ok.svg"
 import onFailureAuth from "../images/popup/fail.svg"
@@ -22,11 +23,17 @@ import {CurrentUserContext} from '../contexts/CurrentUserContext';
 
 function App() {
 
-  const buttonCaptionDefault = {add: "Создать", delete: "Да", others: "Сохранить"}
+  const buttonCaptionDefault = {add: "Создать", delete: "Да", others: "Сохранить"};
+  const toolTipDataFail = {image: onFailureAuth, text:"Что-то пошло не так! Попробуйте ещё раз."};
+  const toolTipDataSuccess = {image: onSuccessAuth, text:"Вы успешно зарегистрировались!"};
+
+  const history = useHistory();
 
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [userEmail, setUserEmail] = React.useState("example@example.com");
 
   const [isInfoTooltipPopupOpen, setisInfoTooltipPopupOpen] = React.useState(false);
+  const [toolTipData, setToolTipData] = React.useState(toolTipDataFail);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
@@ -38,6 +45,24 @@ function App() {
   const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
+
+    const jwt = localStorage.getItem('token');
+
+    Auth.checkUser(jwt)
+    .then((tokenCkeck) => {
+      if(tokenCkeck.data._id && tokenCkeck.data.email){
+        setUserEmail(tokenCkeck.data.email);
+        setIsLoggedIn(true);
+      }
+    })
+    .catch((error) => {
+      if(error.split(" ")[1] === "401"){
+        return;
+      }
+      else{
+        alert(error);
+      }
+    });
 
     Promise.all([Api.getUserInfo(), Api.getInitialCards()])
     .then(([userData, cards]) => {
@@ -54,7 +79,42 @@ function App() {
   }, []);
 
   function toggleLogin(){
-    isLoggedIn ? setIsLoggedIn(false) : setIsLoggedIn(true);
+    isLoggedIn ? onSignOut(false) : setIsLoggedIn(true);
+  }
+
+  function onSignOut(value){
+    localStorage.removeItem('token');
+    setIsLoggedIn(value);
+    closeAllPopups();
+  }
+
+  function handleCardDelete(card){
+    setCardToDelete(card);
+  }
+
+  function handleCardClick(card){
+    setSelectedCard(card);
+  }
+
+  function handleEditAvatarClick(){
+    setEditAvatarPopupOpen(true);
+  }
+  
+  function handleEditProfileClick(){
+    setEditProfilePopupOpen(true);
+  }
+  
+  function handleAddPlaceClick(){
+    setAddPlacePopupOpen(true);
+  }
+
+  function closeAllPopups(){
+    setEditProfilePopupOpen(false);
+    setAddPlacePopupOpen(false);
+    setEditAvatarPopupOpen(false);
+    setisInfoTooltipPopupOpen(false);
+    setSelectedCard(null);
+    setCardToDelete(null);
   }
 
   function handleCardLike(card) {
@@ -78,39 +138,6 @@ function App() {
         alert(error);
       });
     }
-  }
-
-  function handleCardDelete(card){
-    setCardToDelete(card);
-  }
-
-  function handleCardClick(card){
-    setSelectedCard(card);
-  }
-
-  function handleEditAvatarClick(){
-    setEditAvatarPopupOpen(true);
-  }
-  
-  function handleEditProfileClick(){
-    setEditProfilePopupOpen(true);
-  }
-  
-  function handleAddPlaceClick(){
-    setAddPlacePopupOpen(true);
-  }
-
-  function handleOpenInfoToolTip(){
-    setisInfoTooltipPopupOpen(true);
-  }
-
-  function closeAllPopups(){
-    setEditProfilePopupOpen(false);
-    setAddPlacePopupOpen(false);
-    setEditAvatarPopupOpen(false);
-    setisInfoTooltipPopupOpen(false);
-    setSelectedCard(null);
-    setCardToDelete(null);
   }
 
   function handleUpdateUser({name, about}){
@@ -179,12 +206,44 @@ function App() {
     });
   }
 
+  function onLogin({email, password}){
+    Auth.signIn({
+      email: email, 
+      password: password
+    })
+    .then((response) => {
+      localStorage.setItem('token', response.token);
+      setUserEmail(email);
+      toggleLogin();
+      history.push("/");
+    })
+    .catch(() => {
+      setToolTipData(toolTipDataFail);
+      setisInfoTooltipPopupOpen(true);
+    });
+  }
+
+  function onRegister({email, password}){
+    Auth.signUp({
+      email: email, 
+      password: password
+    })
+    .then(() => {
+      setToolTipData(toolTipDataSuccess);
+      setisInfoTooltipPopupOpen(true);
+    })
+    .catch(() => {
+      setToolTipData(toolTipDataFail);
+      setisInfoTooltipPopupOpen(true);
+    });
+  }
+
   return (
     <BrowserRouter>
       <div className="page page__content">
         <CurrentUserContext.Provider value={{currentUser: currentUser, isloggedIn: isLoggedIn, handleLogin: toggleLogin}}>
           <ProtectedRoute 
-            exact path='/' component={Header} data={{email: "email@mail.com", text: "", link: "", button: "Выйти"}} onLogout={toggleLogin}
+            exact path='/' component={Header} data={{email: userEmail, text: "", link: "", button: "Выйти"}} onSignOut={toggleLogin}
           />
           <ProtectedRoute 
             exact path='/' component={Main}
@@ -227,14 +286,14 @@ function App() {
             <Route exact path="/sign-in">
               {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
               <Header data={{email: "", text:"Регистрация", link: "/sign-up", button: ""}}/>
-              <Login onLoginFail={handleOpenInfoToolTip} onLogin={toggleLogin}/>
-              <InfoTooltip isOpen={isInfoTooltipPopupOpen} image={onFailureAuth} text={"Что-то пошло не так! Попробуйте ещё раз."} onClose={closeAllPopups}/>
+              <Login onLogin={onLogin}/>
+              <InfoTooltip isOpen={isInfoTooltipPopupOpen} data={toolTipData} onClose={closeAllPopups}/>
             </Route>
             <Route exact path="/sign-up">
               {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/sign-up" />}
               <Header data={{email: "", text:"Войти", link: "/sign-in", button: ""}}/>
-              <Register onRegisterSuccess={handleOpenInfoToolTip}/>
-              <InfoTooltip isOpen={isInfoTooltipPopupOpen} image={onSuccessAuth} text={"Вы успешно зарегистрировались!"} onClose={closeAllPopups}/>
+              <Register onRegister={onRegister}/>
+              <InfoTooltip isOpen={isInfoTooltipPopupOpen} data={toolTipData} onClose={closeAllPopups}/>
             </Route>
             <Route exact path="/">
               {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}

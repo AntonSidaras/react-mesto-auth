@@ -1,7 +1,6 @@
 import React from 'react';
-import Auth from '../utils/auth';
 
-function Login({onLoginFail, onLogin}) {
+function Login({onLogin}) {
 
   const emailRef = React.useRef();
   const passwordRef = React.useRef();
@@ -9,18 +8,9 @@ function Login({onLoginFail, onLogin}) {
   function handleSubmit(event){
     event.preventDefault();
 
-    Auth.signIn({
+    onLogin({
       email: emailRef.current.value, 
       password: passwordRef.current.value
-    })
-    .then((response) => {
-      console.log(response.token);
-      localStorage.setItem('token', response.token);
-      onLogin();
-    })
-    .catch((error) => {
-      console.log(error);
-      onLoginFail();
     });
   }
   

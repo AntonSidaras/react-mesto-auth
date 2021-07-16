@@ -1,24 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Auth from '../utils/auth';
 
-function Register({onRegisterSuccess}) {
+function Register({onRegister}) {
 
   const emailRef = React.useRef();
   const passwordRef = React.useRef();
 
   function handleSubmit(event){
     event.preventDefault();
-    Auth.signUp({
+
+    onRegister({
       email: emailRef.current.value, 
       password: passwordRef.current.value
-    })
-    .then((response) => {
-      console.log(response.data);
-      onRegisterSuccess();
-    })
-    .catch((error) => {
-      console.log(error);
     });
   }
 

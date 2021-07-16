@@ -9,8 +9,6 @@ class Auth {
   }
 
   signUp({email, password}){
-    console.log(email);
-    console.log(password);
     return fetch(this._server + this._signUp, {
       method: "POST",
       headers: {
